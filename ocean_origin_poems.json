@@ -1,0 +1,37 @@
+{
+  "collection_title": "Five Poems on the Ocean and the Origin of Life",
+  "curator": "Prof. Edmund Halvorsen, Faculty of English, University of Oxford (fictional persona)",
+  "language": "English",
+  "poems": [
+    {
+      "id": 1,
+      "title": "The First Breath",
+      "author": "Prof. Edmund Halvorsen",
+      "body": "Before the word, before the wing,\nbefore the green of any growing thing,\nthere was the dark, the salted dark,\nand in its hush, a single spark.\n\nNo lung, no name, no mortal eye—\nonly the slow, unhurried sky\nof water folding into water,\nmother, daughter, mother, daughter.\n\nAnd from that fold, a molecule\nlearned the patience of the rule:\nto copy, copy, copy, copy—\nuntil the copy turned to me."
+    },
+    {
+      "id": 2,
+      "title": "Cradle of Salt",
+      "author": "Prof. Edmund Halvorsen",
+      "body": "We call her ocean, but she is older\nthan the words we drape upon her shoulder.\nShe was the kettle, she the broth,\nthe lightning's anvil, the comet's froth.\n\nIn her tide pools, warm as breath,\nshe taught the carbon how to wed,\nhow to bind and how to break,\nhow to suffer for the suffering's sake.\n\nEvery tear you weep tonight\nis a small return, a quiet rite—\nthe salt remembers, though you forget,\nthe womb you left, and the debt, the debt."
+    },
+    {
+      "id": 3,
+      "title": "Vent",
+      "author": "Prof. Edmund Halvorsen",
+      "body": "Down where the sun has never been,\nwhere pressure crushes light to stone,\na chimney smokes its mineral hymn\nand life begins, and lives alone.\n\nNo chlorophyll, no leaf, no bloom—\njust sulfur singing in the gloom,\nand tube-worms swaying, blind and bright,\ntheir crimson plumes a kind of light.\n\nWe thought the sun was all our cause.\nWe were mistaken. There are laws\nthat older, deeper currents keep—\nand life climbs upward from the deep."
+    },
+    {
+      "id": 4,
+      "title": "Letter to My Ancestor",
+      "author": "Prof. Edmund Halvorsen",
+      "body": "Dear small thing, dear shimmer, dear\ntranslucent comma in the early sea—\nI write to thank you, four billion years\ntoo late, for choosing to be.\n\nYou could have stayed a slick of oil,\nan accident the tide dissolved.\nInstead you doubled, learned to spoil,\nto hunger, hurry, be involved.\n\nI carry you in every cell,\nin every salt-bright human tear.\nForgive the noise, the steel, the smell.\nForgive the world you bore. I'm here."
+    },
+    {
+      "id": 5,
+      "title": "What the Tide Said",
+      "author": "Prof. Edmund Halvorsen",
+      "body": "I made you, said the tide,\nthough you have forgotten my face.\nI rocked your first division,\nI was your first embrace.\n\nYou walked away on borrowed bone,\nyou learned to breathe the thinner air,\nyou built your cities out of stone\nand called the distance everywhere.\n\nBut come back, come back at evening,\nlay your ear against the shore—\nthat sound is not the sea's complaint.\nIt is the sound of something more:\n\nthe long, slow welcome of the deep,\nthe lullaby it cannot keep\nfrom singing, even now, to you—\nits child, its strange, its overdue."
+    }
+  ]
+}

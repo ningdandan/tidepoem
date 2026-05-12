@@ -1,0 +1,167 @@
+{
+  "collection_title": "Twenty Historical Poems on the Sea and the Origins of Life",
+  "curator_note": "A selection by a (fictional) Oxford professor of literature. These are real, attributed historical poems. Where the original poem is long, an excerpt is given and clearly marked as such. Translations of non-English poems are noted. The theme 'origin of life' is interpreted broadly: the sea as primal source, mother, cradle, void, deep, and beginning — a thematic strand that runs from Genesis and Homer through Romanticism, Victorian doubt, and into the modern age.",
+  "language": "English (with translated works noted)",
+  "poems": [
+    {
+      "id": 1,
+      "title": "Dover Beach (excerpt, final stanza)",
+      "author": "Matthew Arnold",
+      "year": "1867",
+      "note": "Written in the wake of Darwin's Origin of Species (1859). Arnold hears, in the ocean's withdrawing roar, the receding 'Sea of Faith.'",
+      "body": "The Sea of Faith\nWas once, too, at the full, and round earth's shore\nLay like the folds of a bright girdle furled.\nBut now I only hear\nIts melancholy, long, withdrawing roar,\nRetreating, to the breath\nOf the night-wind, down the vast edges drear\nAnd naked shingles of the world.\n\nAh, love, let us be true\nTo one another! for the world, which seems\nTo lie before us like a land of dreams,\nSo various, so beautiful, so new,\nHath really neither joy, nor love, nor light,\nNor certitude, nor peace, nor help for pain;\nAnd we are here as on a darkling plain\nSwept with confused alarms of struggle and flight,\nWhere ignorant armies clash by night."
+    },
+    {
+      "id": 2,
+      "title": "On the Sea",
+      "author": "John Keats",
+      "year": "1817",
+      "note": "Complete sonnet. Written on the Isle of Wight.",
+      "body": "It keeps eternal whisperings around\n  Desolate shores, and with its mighty swell\n  Gluts twice ten thousand caverns, till the spell\nOf Hecate leaves them their old shadowy sound.\nOften 'tis in such gentle temper found,\n  That scarcely will the very smallest shell\n  Be moved for days from where it sometime fell,\nWhen last the winds of heaven were unbound.\nOh ye! who have your eyeballs vexed and tired,\n  Feast them upon the wideness of the Sea;\nOh ye! whose ears are dinned with uproar rude,\n  Or fed too much with cloying melody—\nSit ye near some old cavern's mouth, and brood\n  Until ye start, as if the sea-nymphs quired!"
+    },
+    {
+      "id": 3,
+      "title": "I started Early – Took my Dog",
+      "author": "Emily Dickinson",
+      "year": "c. 1862",
+      "note": "Complete poem, often catalogued as Fr. 656. Dickinson stages an encounter with the sea as a courtly, dangerous suitor.",
+      "body": "I started Early – Took my Dog –\nAnd visited the Sea –\nThe Mermaids in the Basement\nCame out to look at me –\n\nAnd Frigates – in the Upper Floor\nExtended Hempen Hands –\nPresuming Me to be a Mouse –\nAground – upon the Sands –\n\nBut no Man moved Me – till the Tide\nWent past my simple Shoe –\nAnd past my Apron – and my Belt\nAnd past my Bodice – too –\n\nAnd made as He would eat me up –\nAs wholly as a Dew\nUpon a Dandelion's Sleeve –\nAnd then – I started – too –\n\nAnd He – He followed – close behind –\nI felt His Silver Heel\nUpon my Ankle – Then My Shoes\nWould overflow with Pearl –\n\nUntil We met the Solid Town –\nNo One He seemed to know –\nAnd bowing – with a Mighty look –\nAt me – The Sea withdrew –"
+    },
+    {
+      "id": 4,
+      "title": "Sea-Fever",
+      "author": "John Masefield",
+      "year": "1902",
+      "note": "Complete poem, from Salt-Water Ballads.",
+      "body": "I must go down to the seas again, to the lonely sea and the sky,\nAnd all I ask is a tall ship and a star to steer her by;\nAnd the wheel's kick and the wind's song and the white sail's shaking,\nAnd a grey mist on the sea's face, and a grey dawn breaking.\n\nI must go down to the seas again, for the call of the running tide\nIs a wild call and a clear call that may not be denied;\nAnd all I ask is a windy day with the white clouds flying,\nAnd the flung spray and the blown spume, and the sea-gulls crying.\n\nI must go down to the seas again, to the vagrant gypsy life,\nTo the gull's way and the whale's way where the wind's like a whetted knife;\nAnd all I ask is a merry yarn from a laughing fellow-rover,\nAnd quiet long sleep and quiet dream when the long trick's over."
+    },
+    {
+      "id": 5,
+      "title": "Out of the Cradle Endlessly Rocking (excerpt, opening)",
+      "author": "Walt Whitman",
+      "year": "1859",
+      "note": "Opening of Whitman's long lyric. The sea is named the 'savage old mother' and the 'cradle' from which the poet's vocation is born.",
+      "body": "Out of the cradle endlessly rocking,\nOut of the mocking-bird's throat, the musical shuttle,\nOut of the Ninth-month midnight,\nOver the sterile sands and the fields beyond, where the child leaving his bed wander'd alone, bareheaded, barefoot,\nDown from the shower'd halo,\nUp from the mystic play of shadows twining and twisting as if they were alive,\nOut from the patches of briers and blackberries,\nFrom the memories of the bird that chanted to me,\nFrom your memories sad brother, from the fitful risings and fallings I heard,\nFrom under that yellow half-moon late-risen and swollen as if with tears,\nFrom those beginning notes of yearning and love there in the mist,\nFrom the thousand responses of my heart never to cease,\nFrom the myriad thence-arous'd words,\nFrom the word stronger and more delicious than any,\nFrom such as now they start the scene revisiting,\nAs a flock, twittering, rising, or overhead passing,\nBorn here of parents the same, and their parents the same,\nI, chanter of pains and joys, uniter of here and hereafter,\nTaking all hints to use them, but swiftly leaping beyond them,\nA reminiscence sing."
+    },
+    {
+      "id": 6,
+      "title": "The Rime of the Ancient Mariner (excerpt, Part II)",
+      "author": "Samuel Taylor Coleridge",
+      "year": "1798",
+      "note": "Brief excerpt from the long Romantic ballad. The famous becalmed-sea passage.",
+      "body": "Day after day, day after day,\nWe stuck, nor breath nor motion;\nAs idle as a painted ship\nUpon a painted ocean.\n\nWater, water, every where,\nAnd all the boards did shrink;\nWater, water, every where,\nNor any drop to drink.\n\nThe very deep did rot: O Christ!\nThat ever this should be!\nYea, slimy things did crawl with legs\nUpon the slimy sea."
+    },
+    {
+      "id": 7,
+      "title": "Break, Break, Break",
+      "author": "Alfred, Lord Tennyson",
+      "year": "1842",
+      "note": "Complete poem. An elegy whose grief is voiced through the cold sea.",
+      "body": "Break, break, break,\n  On thy cold gray stones, O Sea!\nAnd I would that my tongue could utter\n  The thoughts that arise in me.\n\nO well for the fisherman's boy,\n  That he shouts with his sister at play!\nO well for the sailor lad,\n  That he sings in his boat on the bay!\n\nAnd the stately ships go on\n  To their haven under the hill;\nBut O for the touch of a vanish'd hand,\n  And the sound of a voice that is still!\n\nBreak, break, break,\n  At the foot of thy crags, O Sea!\nBut the tender grace of a day that is dead\n  Will never come back to me."
+    },
+    {
+      "id": 8,
+      "title": "The Sea and the Skylark",
+      "author": "Gerard Manley Hopkins",
+      "year": "1877 (published posthumously 1918)",
+      "note": "Complete sonnet. Hopkins contrasts the ancient sea and the bird's song against humanity's modern degradation.",
+      "body": "On ear and ear two noises too old to end\n  Trench—right, the tide that ramps against the shore;\n  With a flood or a fall, low lull-off or all roar,\nFrequenting there while moon shall wear and wend.\n\nLeft hand, off land, I hear the lark ascend,\n  His rash-fresh re-winded new-skeinèd score\n  In crisps of curl off wild winch whirl, and pour\nAnd pelt music, till none's to spill nor spend.\n\nHow these two shame this shallow and frail town!\n  How ring right out our sordid turbid time,\nBeing pure! We, life's pride and cared-for crown,\n\n  Have lost that cheer and charm of earth's past prime:\nOur make and making break, are breaking, down\n  To man's last dust, drain fast towards man's first slime."
+    },
+    {
+      "id": 9,
+      "title": "Crossing the Bar",
+      "author": "Alfred, Lord Tennyson",
+      "year": "1889",
+      "note": "Complete poem. Tennyson's late lyric of death as an outgoing tide.",
+      "body": "Sunset and evening star,\n  And one clear call for me!\nAnd may there be no moaning of the bar,\n  When I put out to sea,\n\nBut such a tide as moving seems asleep,\n  Too full for sound and foam,\nWhen that which drew from out the boundless deep\n  Turns again home.\n\nTwilight and evening bell,\n  And after that the dark!\nAnd may there be no sadness of farewell,\n  When I embark;\n\nFor tho' from out our bourne of Time and Place\n  The flood may bear me far,\nI hope to see my Pilot face to face\n  When I have crost the bar."
+    },
+    {
+      "id": 10,
+      "title": "Maggie and Milly and Molly and May",
+      "author": "E. E. Cummings",
+      "year": "1956",
+      "note": "Complete poem. The sea as the mirror in which the self is found.",
+      "body": "maggie and milly and molly and may\nwent down to the beach (to play one day)\n\nand maggie discovered a shell that sang\nso sweetly she couldn't remember her troubles, and\n\nmilly befriended a stranded star\nwhose rays five languid fingers were;\n\nand molly was chased by a horrible thing\nwhich raced sideways while blowing bubbles: and\n\nmay came home with a smooth round stone\nas small as a world and as large as alone.\n\nFor whatever we lose (like a you or a me)\nit's always ourselves we find in the sea"
+    },
+    {
+      "id": 11,
+      "title": "Sea Rose",
+      "author": "H. D. (Hilda Doolittle)",
+      "year": "1916",
+      "note": "Complete poem, from Sea Garden. A classic of Imagism.",
+      "body": "Rose, harsh rose,\nmarred and with stint of petals,\nmeagre flower, thin,\nsparse of leaf,\n\nmore precious\nthan a wet rose\nsingle on a stem—\nyou are caught in the drift.\n\nStunted, with small leaf,\nyou are flung on the sand,\nyou are lifted\nin the crisp sand\nthat drives in the wind.\n\nCan the spice-rose\ndrip such acrid fragrance\nhardened in a leaf?"
+    },
+    {
+      "id": 12,
+      "title": "The Idea of Order at Key West (excerpt)",
+      "author": "Wallace Stevens",
+      "year": "1934",
+      "note": "Opening lines of Stevens's meditation on the sea as the inhuman ground over which human song imposes form.",
+      "body": "She sang beyond the genius of the sea.\nThe water never formed to mind or voice,\nLike a body wholly body, fluttering\nIts empty sleeves; and yet its mimic motion\nMade constant cry, caused constantly a cry,\nThat was not ours although we understood,\nInhuman, of the veritable ocean.\n\nThe sea was not a mask. No more was she.\nThe song and water were not medleyed sound\nEven if what she sang was what she heard,\nSince what she sang was uttered word by word.\nIt may be that in all her phrases stirred\nThe grinding water and the gasping wind;\nBut it was she and not the sea we heard."
+    },
+    {
+      "id": 13,
+      "title": "Full Fathom Five (Ariel's Song, from The Tempest, Act I, sc. ii)",
+      "author": "William Shakespeare",
+      "year": "c. 1611",
+      "note": "Complete song. Ariel's song of sea-change — bodily dissolution becoming something 'rich and strange.'",
+      "body": "Full fathom five thy father lies;\n  Of his bones are coral made;\nThose are pearls that were his eyes:\n  Nothing of him that doth fade,\nBut doth suffer a sea-change\nInto something rich and strange.\nSea-nymphs hourly ring his knell:\n   Ding-dong.\nHark! now I hear them, — ding-dong, bell."
+    },
+    {
+      "id": 14,
+      "title": "Meditation XVII (prose-poem excerpt)",
+      "author": "John Donne",
+      "year": "1624",
+      "note": "From Devotions upon Emergent Occasions. Strictly speaking prose, but its rhythmic, image-driven cadence has made it a touchstone of English literary tradition. The sea as the great undifferentiated whole into which each life flows.",
+      "body": "No man is an island, entire of itself; every man is a piece of the continent, a part of the main. If a clod be washed away by the sea, Europe is the less, as well as if a promontory were, as well as if a manor of thy friend's or of thine own were: any man's death diminishes me, because I am involved in mankind, and therefore never send to know for whom the bell tolls; it tolls for thee."
+    },
+    {
+      "id": 15,
+      "title": "Sonnet — To the Sea",
+      "author": "Charlotte Smith",
+      "year": "1784",
+      "note": "From Elegiac Sonnets. Smith was a key figure in the late-18th-century revival of the English sonnet; her sea is a Romantic precursor.",
+      "body": "On thy stupendous summit, rock sublime!\n  That o'er the channel rear'd, half way at sea\n  The mariner at early morning hails,\nI would recline; while Fancy should go forth,\nAnd represent the strange and awful hour\n  Of vast concussion; when the Omnipotent\nStretch'd forth his arm, and rent the solid hills,\n  Bidding the impetuous main flood rush between\nThe rifted shores, and from the continent\n  Eternally divided this green isle.\nImperial lord of the high southern coast!\n  From thy projecting headland I would mark\nFar in the east the shades of night disperse,\n  Melting and thinned, as from the dark blue wave\nEmerging, brilliant rays of arrowy light\n  Dart from the horizon..."
+    },
+    {
+      "id": 16,
+      "title": "The Sea (excerpt)",
+      "author": "Pablo Neruda (translated from Spanish by Alastair Reid)",
+      "year": "1962",
+      "note": "Excerpt. Originally 'El Mar,' from Plenos Poderes (Fully Empowered). Translation widely anthologised.",
+      "body": "I need the sea because it teaches me.\nI don't know if I learn music or awareness,\nif it's a single wave or its vast existence,\nor only its harsh voice or its shining\nsuggestion of fishes and ships.\nThe fact is that until I fall asleep,\nin some magnetic way I move in\nthe university of the waves.\n\nIt's not simply the shells crunched\nas if some shivering planet\nwere giving signs of its gradual death;\nno, I reconstruct the day out of a fragment,\nthe stalactite from a sliver of salt,\nand the great god out of a spoonful."
+    },
+    {
+      "id": 17,
+      "title": "Genesis 1:1–10 (King James Version, 1611)",
+      "author": "Anonymous (Hebrew Bible, English translation 1611)",
+      "year": "1611",
+      "note": "Not a 'poem' in the modern sense, but a foundational cosmogonic text of the English literary tradition — the waters precede the world, and life begins by their division. Included here for the way English-language poetry of every century has been haunted by these cadences.",
+      "body": "In the beginning God created the heaven and the earth. And the earth was without form, and void; and darkness was upon the face of the deep. And the Spirit of God moved upon the face of the waters. And God said, Let there be light: and there was light. And God saw the light, that it was good: and God divided the light from the darkness. And God called the light Day, and the darkness he called Night. And the evening and the morning were the first day.\n\nAnd God said, Let there be a firmament in the midst of the waters, and let it divide the waters from the waters. And God made the firmament, and divided the waters which were under the firmament from the waters which were above the firmament: and it was so. And God called the firmament Heaven. And the evening and the morning were the second day.\n\nAnd God said, Let the waters under the heaven be gathered together unto one place, and let the dry land appear: and it was so. And God called the dry land Earth; and the gathering together of the waters called he Seas: and God saw that it was good."
+    },
+    {
+      "id": 18,
+      "title": "The Seafarer (excerpt; trans. Ezra Pound)",
+      "author": "Anonymous (Old English, c. 10th century); translated by Ezra Pound",
+      "year": "Original c. 950; translation 1911",
+      "note": "Excerpt from Pound's celebrated rendering of the Anglo-Saxon poem preserved in the Exeter Book. The earliest layer of English sea-poetry.",
+      "body": "May I for my own self song's truth reckon,\nJourney's jargon, how I in harsh days\nHardship endured oft.\nBitter breast-cares have I abided,\nKnown on my keel many a care's hold,\nAnd dire sea-surge, and there I oft spent\nNarrow nightwatch nigh the ship's head\nWhile she tossed close to cliffs. Coldly afflicted,\nMy feet were by frost benumbed.\nChill its chains are; chafing sighs\nHew my heart round and hunger begot\nMere-weary mood..."
+    },
+    {
+      "id": 19,
+      "title": "The Fish (excerpt)",
+      "author": "Elizabeth Bishop",
+      "year": "1946",
+      "note": "Excerpt — the closing movement of Bishop's well-known poem. A creature drawn from the sea becomes the occasion for a quiet revelation of life's persistence.",
+      "body": "I stared and stared\nand victory filled up\nthe little rented boat,\nfrom the pool of bilge\nwhere oil had spread a rainbow\naround the rusted engine\nto the bailer rusted orange,\nthe sun-cracked thwarts,\nthe oarlocks on their strings,\nthe gunnels—until everything\nwas rainbow, rainbow, rainbow!\nAnd I let the fish go."
+    },
+    {
+      "id": 20,
+      "title": "The Moon and the Yew Tree / Lorelei / At the Fishhouses — note on Bishop",
+      "author": "Elizabeth Bishop",
+      "year": "1955",
+      "note": "Closing excerpt from 'At the Fishhouses.' Among the most cited modern English-language lines on the sea as the cold, originary element — water as 'what we imagine knowledge to be.' Often discussed alongside Darwin and the evolutionary imagination.",
+      "body": "I have seen it over and over, the same sea, the same,\nslightly, indifferently swinging above the stones,\nicily free above the stones,\nabove the stones and then the world.\nIf you should dip your hand in,\nyour wrist would ache immediately,\nyour bones would begin to ache and your hand would burn\nas if the water were a transmutation of fire\nthat feeds on stones and burns with a dark gray flame.\nIf you tasted it, it would first taste bitter,\nthen briny, then surely burn your tongue.\nIt is like what we imagine knowledge to be:\ndark, salt, clear, moving, utterly free,\ndrawn from the cold hard mouth\nof the world, derived from the rocky breasts\nforever, flowing and drawn, and since\nour knowledge is historical, flowing, and flown."
+    }
+  ]
+}

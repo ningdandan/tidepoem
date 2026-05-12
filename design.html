@@ -1,0 +1,1204 @@
+<html lang="en" data-theme="dark" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" vid="3">
+    <title vid="4">Nocturne // Coastal Poetry</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js" vid="5"></script>
+
+    <style vid="6">
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=IBM+Plex+Mono:wght@300;400&display=swap');
+
+        :root {
+            --bg-base: #020608; 
+            --text-primary: #FFFFFF;
+            --text-muted: rgba(255, 255, 255, 0.4);
+            --biolume: #00ffcc;
+            --font-serif: 'Cormorant Garamond', serif;
+            --font-sans: 'IBM Plex Mono', monospace;
+            --transition-soft: opacity 2s ease-in-out;
+            --wash-duration: 1450ms;
+            --gather-duration: 1900ms;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        html::-webkit-scrollbar,
+        body::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+            display: none;
+        }
+
+        body {
+            font-family: var(--font-serif);
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            overflow-y: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        #webgl-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .content-layer {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 720px;
+            text-align: center;
+            min-height: 122vh;
+            margin: 0 auto;
+            padding: 22vh 40px 220px;
+        }
+
+        .poem-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.35rem;
+            animation: fadeIn 4s ease-in;
+            transition: opacity 0.9s ease, transform 0.9s ease;
+            opacity: 1;
+            transform: translateY(0);
+            padding: 0 12px 24px;
+        }
+
+        .poem-container.is-transitioning {
+            opacity: 0;
+            transform: translateY(16px);
+        }
+
+        .poem-header {
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+        }
+
+        .poem-title {
+            font-size: clamp(20px, 3vw, 28px);
+            font-weight: 300;
+            letter-spacing: 0.02em;
+        }
+
+        .poem-author {
+            font-family: var(--font-sans);
+            font-size: 10px;
+            letter-spacing: 0.04em;
+            color: var(--text-muted);
+        }
+
+        #poem-body {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .poem-line {
+            font-size: 20px;
+            font-weight: 300;
+            line-height: 1.5;
+            letter-spacing: 0.02em;
+            font-style: italic;
+        }
+
+        .poem-stanza {
+            margin-bottom: 1.3rem;
+        }
+
+        .poem-word {
+            display: inline-block;
+            white-space: nowrap;
+        }
+
+        .poem-fragment-char {
+            display: inline-block;
+            white-space: pre;
+            will-change: transform, opacity, filter;
+        }
+
+        .footer-nav {
+            position: fixed;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            z-index: 20;
+            width: min(90vw, 460px);
+            text-align: center;
+        }
+
+        .top-status {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+            width: min(90vw, 460px);
+            text-align: center;
+        }
+
+        .countdown,
+        .countdown-meta {
+            font-family: var(--font-sans);
+            font-size: 10px;
+            letter-spacing: 0.04em;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes washAway {
+            0% {
+                opacity: 1;
+                transform: translate3d(0, 0, 0) rotate(0deg);
+                filter: blur(0);
+            }
+            35% {
+                opacity: 0.95;
+            }
+            100% {
+                opacity: 0;
+                transform: translate3d(
+                    calc(var(--drift-x, 0) * 1px),
+                    calc((var(--drift-y, 72) * -1px) - 36px),
+                    0
+                ) rotate(calc(var(--rotate, 0) * 1deg));
+                filter: blur(10px);
+            }
+        }
+
+        @keyframes gatherIn {
+            0% {
+                opacity: 0;
+                transform: translate3d(
+                    calc(var(--drift-x, 0) * 0.7px),
+                    calc(var(--drift-y, 72) * 1px),
+                    0
+                ) rotate(calc(var(--rotate, 0) * -0.7deg));
+                filter: blur(10px);
+            }
+            55% {
+                opacity: 0.72;
+            }
+            100% {
+                opacity: 1;
+                transform: translate3d(0, 0, 0) rotate(0deg);
+                filter: blur(0);
+            }
+        }
+
+        .poem-container.is-flushing .poem-fragment-char {
+            animation: washAway var(--wash-duration) cubic-bezier(0.22, 0.8, 0.12, 1) forwards;
+            animation-delay: var(--line-delay, 0ms);
+        }
+
+        .poem-container.is-gathering .poem-fragment-char {
+            animation: gatherIn var(--gather-duration) cubic-bezier(0.16, 1, 0.3, 1) both;
+            animation-delay: var(--line-delay, 0ms);
+        }
+
+        .poem-container.is-pre-gather .poem-fragment-char {
+            opacity: 0;
+            transform: translate3d(
+                calc(var(--drift-x, 0) * 0.7px),
+                calc(var(--drift-y, 72) * 1px),
+                0
+            ) rotate(calc(var(--rotate, 0) * -0.7deg));
+            filter: blur(10px);
+        }
+
+        
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, transparent 20%, rgba(0,0,0,0.8) 100%);
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 26vh;
+            background: linear-gradient(
+                to bottom,
+                rgba(2, 6, 8, 0.98) 0%,
+                rgba(2, 6, 8, 0.92) 28%,
+                rgba(2, 6, 8, 0.72) 55%,
+                rgba(2, 6, 8, 0.35) 78%,
+                rgba(2, 6, 8, 0) 100%
+            );
+            pointer-events: none;
+            z-index: 15;
+        }
+
+        .bottom-fade {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 30vh;
+            background: linear-gradient(
+                to top,
+                rgba(2, 6, 8, 1) 0%,
+                rgba(2, 6, 8, 0.96) 24%,
+                rgba(2, 6, 8, 0.78) 48%,
+                rgba(2, 6, 8, 0.34) 74%,
+                rgba(2, 6, 8, 0) 100%
+            );
+            pointer-events: none;
+            z-index: 15;
+        }
+
+        @media (max-width: 720px) {
+            .content-layer {
+                min-height: 120vh;
+                padding: 20vh 24px 210px;
+            }
+
+            .top-status {
+                top: 16px;
+            }
+
+            .poem-line {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body vid="7">
+
+    <div id="webgl-container" vid="8"></div>
+    <audio id="ambient-audio" preload="auto" loop playsinline>
+        <source src="./ocean sounds.wav" type="audio/wav">
+    </audio>
+
+    <div class="top-status">
+        <div class="countdown-meta" id="visitor-count">visitors today: 1</div>
+    </div>
+
+    <div class="content-layer" vid="10">
+        <div class="poem-container" id="poem-container" vid="11">
+            <div class="poem-header">
+                <h1 class="poem-title" id="poem-title">Loading poems...</h1>
+                <p class="poem-author" id="poem-author">Awaiting the next tide signal</p>
+            </div>
+            <div id="poem-body"></div>
+        </div>
+    </div>
+
+    <div class="bottom-fade" aria-hidden="true"></div>
+
+    <div class="footer-nav" vid="17">
+        <div class="countdown" id="countdown">Next poem in 00h 00m 00s, San Francisco high tide at 0:00 AM</div>
+        <div class="countdown-meta" id="countdown-meta">Powered by Ouvre</div>
+    </div>
+
+    <script vid="19">
+        const container = document.getElementById('webgl-container');
+        const poemContainer = document.getElementById('poem-container');
+        const poemHeader = document.querySelector('.poem-header');
+        const poemTitle = document.getElementById('poem-title');
+        const poemAuthor = document.getElementById('poem-author');
+        const poemBody = document.getElementById('poem-body');
+        const countdown = document.getElementById('countdown');
+        const countdownMeta = document.getElementById('countdown-meta');
+        const visitorCount = document.getElementById('visitor-count');
+        const ambientAudio = document.getElementById('ambient-audio');
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 10);
+        camera.position.z = 1;
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        container.appendChild(renderer.domElement);
+
+        const geometry = new THREE.PlaneGeometry(2, 2);
+
+        const vertexShader = `
+            varying vec2 vUv;
+            void main() {
+                vUv = uv;
+                gl_Position = vec4(position, 1.0);
+            }
+        `;
+
+        const fragmentShader = `
+            uniform float u_time;
+            uniform vec2 u_resolution;
+            uniform float u_tide_level;
+            varying vec2 vUv;
+
+            float hash(vec2 p) {
+                return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+            }
+
+            float noise(vec2 p) {
+                vec2 i = floor(p);
+                vec2 f = fract(p);
+                f = f * f * (3.0 - 2.0 * f);
+                return mix(mix(hash(i + vec2(0,0)), hash(i + vec2(1,0)), f.x),
+                           mix(hash(i + vec2(0,1)), hash(i + vec2(1,1)), f.x), f.y);
+            }
+
+            void main() {
+                vec2 uv = gl_FragCoord.xy / u_resolution.xy;
+
+                float waterline = mix(0.08, 0.92, u_tide_level);
+
+                // Add wave distortion to the waterline
+                float distortion = noise(vec2(uv.x * 4.0 + u_time * 0.3, u_time * 0.1)) * 0.08;
+                float finalWaterline = waterline + distortion;
+
+                // Create the bioluminescent edge (the "tideline")
+                float distance = abs(uv.y - finalWaterline);
+                float glow = exp(-distance * 45.0); // Sharp intense line
+                float softGlow = exp(-distance * 8.0) * 0.4; // Diffuse glow
+                
+                // Phosphorescence flickers
+                float flicker = noise(vec2(uv.x * 10.0, u_time)) * 0.5 + 0.5;
+                
+                // Teal bioluminescent color
+                vec3 biolumeColor = vec3(0.0, 1.0, 0.8);
+                vec3 color = biolumeColor * (glow + softGlow) * flicker;
+
+                // Fading into the deep water at bottom
+                float depth = smoothstep(finalWaterline, 0.0, uv.y) * 0.15;
+                color += biolumeColor * depth * flicker;
+
+                gl_FragColor = vec4(color, color.g * 0.8);
+            }
+        `;
+
+        const material = new THREE.ShaderMaterial({
+            vertexShader,
+            fragmentShader,
+            uniforms: {
+                u_time: { value: 0.0 },
+                u_resolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+                u_tide_level: { value: 0.12 }
+            },
+            transparent: true,
+            blending: THREE.AdditiveBlending
+        });
+
+        const mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
+
+        const NOAA_STATION_ID = '9414290';
+        const POEMS_PATH = './historical_sea_poems.json';
+        const TIDE_STORAGE_KEY = 'nocturne-poem-index';
+        const HIGH_TIDE_STORAGE_KEY = 'nocturne-last-high-tide';
+        const DEBUG_QUERY_PARAM = 'debug';
+        const TIDE_REFRESH_INTERVAL_MS = 15 * 60 * 1000;
+        const WATER_LEVEL_REFRESH_INTERVAL_MS = 60 * 1000;
+        const TIDE_FETCH_RANGE_HOURS = 72;
+        const DEBUG_RISE_MS = 5200;
+        const DEBUG_CREST_MS = 1800;
+        const DEBUG_FALL_MS = 4200;
+        const DEBUG_TROUGH_MS = 1300;
+        const DEBUG_TOTAL_MS = DEBUG_RISE_MS + DEBUG_CREST_MS + DEBUG_FALL_MS + DEBUG_TROUGH_MS;
+        const DEBUG_TOGGLE_KEY = 'k';
+        const POEM_FLUSH_DURATION_MS = 1450;
+        const POEM_GATHER_DURATION_MS = 1900;
+        const POEM_GATHER_CLEANUP_MS = 2200;
+        const FOOTER_CREDIT_TEXT = 'Powered by Ouvre';
+        const VISIT_COUNT_STORAGE_PREFIX = 'nocturne-visit-count:';
+        const VISIT_SESSION_STORAGE_PREFIX = 'nocturne-visit-session:';
+        const AUDIO_FALLBACK_EVENTS = ['pointerdown', 'keydown', 'touchstart'];
+        const AMBIENT_AUDIO_TARGET_VOLUME = 0.55;
+        const AMBIENT_AUDIO_FADE_IN_MS = 2400;
+        const AMBIENT_AUDIO_FADE_OUT_MS = 1600;
+        const urlParams = new URLSearchParams(window.location.search);
+
+        const state = {
+            poems: [],
+            poemIndex: 0,
+            predictions: [],
+            observedWaterLevel: null,
+            observedAt: null,
+            currentLevel: 0.12,
+            targetLevel: 0.12,
+            initialized: false,
+            lastCountdownSecond: null,
+            isPoemTransitioning: false,
+            debug: {
+                enabled: false,
+                cycleStartedAt: performance.now(),
+                peakTriggered: false,
+                anchorViewportY: null
+            },
+            audio: {
+                fadeFrameId: null
+            }
+        };
+
+        const pacificTimeFormatter = new Intl.DateTimeFormat('en-US', {
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true,
+            timeZone: 'America/Los_Angeles'
+        });
+
+        function clamp(value, min, max) {
+            return Math.min(max, Math.max(min, value));
+        }
+
+        function easeInOutSine(value) {
+            return 0.5 - (Math.cos(value * Math.PI) / 2);
+        }
+
+        function formatNoaaDate(date) {
+            const year = date.getUTCFullYear();
+            const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+            const day = String(date.getUTCDate()).padStart(2, '0');
+            const hours = String(date.getUTCHours()).padStart(2, '0');
+            const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+            return `${year}${month}${day} ${hours}:${minutes}`;
+        }
+
+        function parseNoaaDate(value) {
+            return new Date(value.replace(' ', 'T') + 'Z');
+        }
+
+        function formatCountdown(milliseconds) {
+            if (milliseconds <= 0) {
+                return '00h 00m 00s';
+            }
+
+            const totalSeconds = Math.floor(milliseconds / 1000);
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+            return `${String(hours).padStart(2, '0')}h ${String(minutes).padStart(2, '0')}m ${String(seconds).padStart(2, '0')}s`;
+        }
+
+        function formatPacificTime(date) {
+            return pacificTimeFormatter.format(date);
+        }
+
+        function getLocalDateKey(date = new Date()) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function updateVisitCounter() {
+            const todayKey = getLocalDateKey();
+            const countStorageKey = `${VISIT_COUNT_STORAGE_PREFIX}${todayKey}`;
+            const sessionStorageKey = `${VISIT_SESSION_STORAGE_PREFIX}${todayKey}`;
+
+            let count = Number.parseInt(localStorage.getItem(countStorageKey) || '0', 10);
+            if (!Number.isFinite(count)) {
+                count = 0;
+            }
+
+            if (!sessionStorage.getItem(sessionStorageKey)) {
+                count += 1;
+                localStorage.setItem(countStorageKey, String(count));
+                sessionStorage.setItem(sessionStorageKey, '1');
+            }
+
+            visitorCount.textContent = `visitors today: ${count}`;
+        }
+
+        function setFooterCredit() {
+            countdownMeta.textContent = FOOTER_CREDIT_TEXT;
+        }
+
+        function cancelAmbientAudioFade() {
+            if (state.audio.fadeFrameId !== null) {
+                window.cancelAnimationFrame(state.audio.fadeFrameId);
+                state.audio.fadeFrameId = null;
+            }
+        }
+
+        function fadeAmbientAudio(targetVolume, duration, { pauseOnComplete = false } = {}) {
+            if (!ambientAudio) {
+                return Promise.resolve();
+            }
+
+            cancelAmbientAudioFade();
+
+            const startVolume = ambientAudio.volume;
+            const volumeDelta = targetVolume - startVolume;
+            const fadeStartedAt = performance.now();
+
+            return new Promise((resolve) => {
+                if (Math.abs(volumeDelta) < 0.001 || duration <= 0) {
+                    ambientAudio.volume = targetVolume;
+                    if (pauseOnComplete && targetVolume === 0) {
+                        ambientAudio.pause();
+                    }
+                    resolve();
+                    return;
+                }
+
+                const step = (now) => {
+                    const progress = clamp((now - fadeStartedAt) / duration, 0, 1);
+                    ambientAudio.volume = clamp(startVolume + (volumeDelta * progress), 0, 1);
+
+                    if (progress < 1) {
+                        state.audio.fadeFrameId = window.requestAnimationFrame(step);
+                        return;
+                    }
+
+                    state.audio.fadeFrameId = null;
+                    ambientAudio.volume = targetVolume;
+                    if (pauseOnComplete && targetVolume === 0) {
+                        ambientAudio.pause();
+                    }
+                    resolve();
+                };
+
+                state.audio.fadeFrameId = window.requestAnimationFrame(step);
+            });
+        }
+
+        function removeAudioUnlockListeners() {
+            AUDIO_FALLBACK_EVENTS.forEach((eventName) => {
+                window.removeEventListener(eventName, attemptAmbientAudioPlayback);
+            });
+        }
+
+        async function attemptAmbientAudioPlayback() {
+            if (!ambientAudio) {
+                return;
+            }
+
+            try {
+                if (ambientAudio.paused) {
+                    ambientAudio.volume = 0;
+                }
+                await ambientAudio.play();
+                await fadeAmbientAudio(AMBIENT_AUDIO_TARGET_VOLUME, AMBIENT_AUDIO_FADE_IN_MS);
+                removeAudioUnlockListeners();
+            } catch (error) {
+                AUDIO_FALLBACK_EVENTS.forEach((eventName) => {
+                    window.addEventListener(eventName, attemptAmbientAudioPlayback, { once: true });
+                });
+            }
+        }
+
+        function syncAmbientAudioWithVisibility() {
+            if (!ambientAudio) {
+                return;
+            }
+
+            if (document.hidden) {
+                fadeAmbientAudio(0, AMBIENT_AUDIO_FADE_OUT_MS, { pauseOnComplete: true }).catch(() => {});
+                return;
+            }
+
+            attemptAmbientAudioPlayback();
+        }
+
+        function getTideLevelForViewportY(viewportY) {
+            const viewportHeight = window.innerHeight || 1;
+            const normalizedFromTop = clamp(viewportY / viewportHeight, 0, 1);
+            const uvY = clamp(1 - normalizedFromTop, 0.08, 0.92);
+            return clamp((uvY - 0.08) / 0.84, 0, 1);
+        }
+
+        function refreshDebugPeakAnchor() {
+            const headerBounds = poemHeader.getBoundingClientRect();
+            state.debug.anchorViewportY = headerBounds.top + window.scrollY + (headerBounds.height * 0.35);
+        }
+
+        function getDebugPeakLevel() {
+            if (state.debug.anchorViewportY === null) {
+                refreshDebugPeakAnchor();
+            }
+
+            return getTideLevelForViewportY(state.debug.anchorViewportY);
+        }
+
+        function getPoemFragments() {
+            return [...document.querySelectorAll('.poem-fragment-char')];
+        }
+
+        function seedPoemFragments() {
+            getPoemFragments().forEach((fragment, index) => {
+                const direction = index % 2 === 0 ? 1 : -1;
+                const driftX = direction * (8 + ((index % 7) * 3));
+                const driftY = 18 + ((index % 11) * 4);
+                const rotate = direction * (1 + ((index % 5) * 0.7));
+                const delay = Math.min(index * 12, 720);
+
+                fragment.style.setProperty('--drift-x', String(driftX));
+                fragment.style.setProperty('--drift-y', String(driftY));
+                fragment.style.setProperty('--rotate', String(rotate));
+                fragment.style.setProperty('--line-delay', `${delay}ms`);
+            });
+        }
+
+        function buildAnimatedTextFragment(text) {
+            const fragment = document.createDocumentFragment();
+            const segments = text.split(/(\s+)/);
+
+            segments.forEach((segment) => {
+                if (!segment) {
+                    return;
+                }
+
+                if (/^\s+$/.test(segment)) {
+                    fragment.appendChild(document.createTextNode(segment));
+                    return;
+                }
+
+                const word = document.createElement('span');
+                word.className = 'poem-word';
+
+                Array.from(segment).forEach((character) => {
+                    const characterSpan = document.createElement('span');
+                    characterSpan.className = 'poem-fragment-char';
+                    characterSpan.textContent = character;
+                    word.appendChild(characterSpan);
+                });
+
+                fragment.appendChild(word);
+            });
+
+            return fragment;
+        }
+
+        function setAnimatedText(target, text) {
+            target.innerHTML = '';
+            target.setAttribute('aria-label', text);
+            target.appendChild(buildAnimatedTextFragment(text));
+        }
+
+        function getStoredPoemIndex() {
+            const storedValue = Number.parseInt(localStorage.getItem(TIDE_STORAGE_KEY) || '0', 10);
+            return Number.isFinite(storedValue) ? storedValue : 0;
+        }
+
+        function setStoredPoemIndex(index) {
+            localStorage.setItem(TIDE_STORAGE_KEY, String(index));
+        }
+
+        function getStoredHighTide() {
+            const value = localStorage.getItem(HIGH_TIDE_STORAGE_KEY);
+            return value ? new Date(value) : null;
+        }
+
+        function setStoredHighTide(date) {
+            if (date instanceof Date && !Number.isNaN(date.getTime())) {
+                localStorage.setItem(HIGH_TIDE_STORAGE_KEY, date.toISOString());
+            }
+        }
+
+        function buildPoemMarkup(poem) {
+            const stanzas = poem.body.trim().split(/\n\s*\n/);
+            poemBody.innerHTML = '';
+
+            stanzas.forEach((stanzaText) => {
+                const stanza = document.createElement('div');
+                stanza.className = 'poem-stanza';
+
+                stanzaText.split('\n').forEach((line) => {
+                    const lineElement = document.createElement('p');
+                    lineElement.className = 'poem-line';
+                    setAnimatedText(lineElement, line);
+                    stanza.appendChild(lineElement);
+                });
+
+                poemBody.appendChild(stanza);
+            });
+
+            seedPoemFragments();
+        }
+
+        function renderPoem(index, options = {}) {
+            if (!state.poems.length) {
+                return;
+            }
+
+            const { transition = 'none' } = options;
+            const shouldFlush = transition === 'switch';
+            const shouldGather = transition === 'switch' || transition === 'gather';
+            const poem = state.poems[index % state.poems.length];
+            const startGathering = () => {
+                poemContainer.classList.add('is-pre-gather');
+                poemContainer.classList.remove('is-gathering');
+                window.requestAnimationFrame(() => {
+                    window.requestAnimationFrame(() => {
+                        poemContainer.classList.remove('is-pre-gather');
+                        poemContainer.classList.add('is-gathering');
+                        window.setTimeout(() => {
+                            poemContainer.classList.remove('is-gathering');
+                            state.isPoemTransitioning = false;
+                        }, POEM_GATHER_CLEANUP_MS);
+                    });
+                });
+            };
+
+            const applyPoem = () => {
+                poemContainer.classList.remove('is-flushing');
+                setAnimatedText(poemTitle, poem.title);
+                setAnimatedText(poemAuthor, poem.author);
+                buildPoemMarkup(poem);
+                refreshDebugPeakAnchor();
+                poemContainer.classList.remove('is-transitioning');
+
+                if (shouldGather) {
+                    startGathering();
+                } else {
+                    state.isPoemTransitioning = false;
+                }
+            };
+
+            if (shouldFlush) {
+                state.isPoemTransitioning = true;
+                poemContainer.classList.remove('is-gathering');
+                poemContainer.classList.add('is-flushing');
+                window.setTimeout(applyPoem, POEM_FLUSH_DURATION_MS);
+            } else {
+                state.isPoemTransitioning = shouldGather;
+                applyPoem();
+            }
+        }
+
+        function advancePoem(steps = 1, options = {}) {
+            if (!state.poems.length) {
+                return;
+            }
+
+            if (state.isPoemTransitioning) {
+                return;
+            }
+
+            const { persist = true, transition = 'switch' } = options;
+            state.poemIndex = (state.poemIndex + steps) % state.poems.length;
+            if (persist) {
+                setStoredPoemIndex(state.poemIndex);
+            }
+            renderPoem(state.poemIndex, { transition });
+        }
+
+        function getPreviousAndNextExtremes(now) {
+            const past = state.predictions.filter((entry) => entry.time <= now);
+            const future = state.predictions.filter((entry) => entry.time > now);
+
+            return {
+                previous: past[past.length - 1] || null,
+                next: future[0] || null
+            };
+        }
+
+        function getNextHighTide(now) {
+            return state.predictions.find((entry) => entry.type === 'H' && entry.time > now) || null;
+        }
+
+        function getCycleBounds(referenceTime) {
+            const { previous, next } = getPreviousAndNextExtremes(referenceTime);
+            if (!previous || !next) {
+                return null;
+            }
+
+            const low = previous.type === 'L' ? previous : (next.type === 'L' ? next : null);
+            const high = previous.type === 'H' ? previous : (next.type === 'H' ? next : null);
+
+            if (!low || !high) {
+                return null;
+            }
+
+            return { low, high };
+        }
+
+        function syncPoemWithHighTides(now) {
+            if (state.debug.enabled) {
+                return;
+            }
+
+            const highTides = state.predictions.filter((entry) => entry.type === 'H' && entry.time <= now);
+            if (!highTides.length) {
+                return;
+            }
+
+            const storedHighTide = getStoredHighTide();
+            if (!storedHighTide || Number.isNaN(storedHighTide.getTime())) {
+                setStoredHighTide(highTides[highTides.length - 1].time);
+                return;
+            }
+
+            const missedHighTides = highTides.filter((entry) => entry.time > storedHighTide);
+            if (!missedHighTides.length) {
+                return;
+            }
+
+            advancePoem(missedHighTides.length);
+            setStoredHighTide(missedHighTides[missedHighTides.length - 1].time);
+        }
+
+        function getNormalizedTideLevel(now) {
+            if (state.debug.enabled) {
+                return state.targetLevel;
+            }
+
+            if (state.observedWaterLevel !== null && state.observedAt instanceof Date && !Number.isNaN(state.observedAt.getTime())) {
+                const bounds = getCycleBounds(state.observedAt);
+                if (bounds) {
+                    const range = bounds.high.value - bounds.low.value;
+                    if (range > 0) {
+                        return clamp((state.observedWaterLevel - bounds.low.value) / range, 0, 1);
+                    }
+                }
+            }
+
+            const { previous, next } = getPreviousAndNextExtremes(now);
+            if (!previous || !next) {
+                return state.targetLevel;
+            }
+
+            const segmentDuration = next.time.getTime() - previous.time.getTime();
+            if (segmentDuration <= 0) {
+                return state.targetLevel;
+            }
+
+            const progress = clamp((now.getTime() - previous.time.getTime()) / segmentDuration, 0, 1);
+            const easedProgress = 0.5 - (Math.cos(progress * Math.PI) / 2);
+
+            if (previous.type === 'L' && next.type === 'H') {
+                return easedProgress;
+            }
+
+            if (previous.type === 'H' && next.type === 'L') {
+                return 1 - easedProgress;
+            }
+
+            return state.targetLevel;
+        }
+
+        function updateCountdown(now) {
+            if (state.debug.enabled) {
+                return;
+            }
+
+            const currentSecond = Math.floor(now.getTime() / 1000);
+            if (state.lastCountdownSecond === currentSecond) {
+                return;
+            }
+            state.lastCountdownSecond = currentSecond;
+
+            const nextHighTide = getNextHighTide(now);
+            if (!nextHighTide) {
+                countdown.textContent = 'Next poem in --h --m --s, San Francisco high tide unavailable';
+                setFooterCredit();
+                return;
+            }
+
+            const timeLeft = nextHighTide.time.getTime() - now.getTime();
+            countdown.textContent = `Next poem in ${formatCountdown(timeLeft)}, San Francisco high tide at ${formatPacificTime(nextHighTide.time)}`;
+            setFooterCredit();
+        }
+
+        function getDebugSnapshot(nowMs) {
+            const elapsed = (nowMs - state.debug.cycleStartedAt) % DEBUG_TOTAL_MS;
+            const peakLevel = getDebugPeakLevel();
+
+            if (elapsed < DEBUG_RISE_MS) {
+                const progress = elapsed / DEBUG_RISE_MS;
+                return {
+                    level: peakLevel * easeInOutSine(progress),
+                    atPeak: false,
+                    phase: 'rise',
+                    timeUntilPeak: DEBUG_RISE_MS - elapsed
+                };
+            }
+
+            if (elapsed < DEBUG_RISE_MS + DEBUG_CREST_MS) {
+                return {
+                    level: peakLevel,
+                    atPeak: true,
+                    phase: 'crest',
+                    timeUntilPeak: 0
+                };
+            }
+
+            if (elapsed < DEBUG_RISE_MS + DEBUG_CREST_MS + DEBUG_FALL_MS) {
+                const progress = (elapsed - DEBUG_RISE_MS - DEBUG_CREST_MS) / DEBUG_FALL_MS;
+                return {
+                    level: peakLevel * (1 - easeInOutSine(progress)),
+                    atPeak: false,
+                    phase: 'fall',
+                    timeUntilPeak: DEBUG_TOTAL_MS - elapsed + DEBUG_RISE_MS
+                };
+            }
+
+            return {
+                level: 0,
+                atPeak: false,
+                phase: 'trough',
+                timeUntilPeak: DEBUG_TOTAL_MS - elapsed + DEBUG_RISE_MS
+            };
+        }
+
+        function updateDebugCountdown(snapshot) {
+            const currentSecond = Math.floor(Date.now() / 1000);
+            if (state.lastCountdownSecond === currentSecond) {
+                return;
+            }
+            state.lastCountdownSecond = currentSecond;
+
+            countdown.textContent = `Next poem in ${formatCountdown(snapshot.timeUntilPeak)}, debug tide preview`;
+            setFooterCredit();
+        }
+
+        function syncDebugMode(nowMs) {
+            const snapshot = getDebugSnapshot(nowMs);
+            state.targetLevel = snapshot.level;
+            updateDebugCountdown(snapshot);
+
+            if (snapshot.atPeak && !state.debug.peakTriggered) {
+                state.debug.peakTriggered = true;
+                advancePoem(1, { persist: false, transition: 'switch' });
+            } else if ((snapshot.phase === 'fall' || snapshot.phase === 'trough') && state.debug.peakTriggered) {
+                state.debug.peakTriggered = false;
+            }
+        }
+
+        function syncDebugQueryParam(enabled) {
+            const nextUrl = new URL(window.location.href);
+            if (enabled) {
+                nextUrl.searchParams.set(DEBUG_QUERY_PARAM, '1');
+            } else {
+                nextUrl.searchParams.delete(DEBUG_QUERY_PARAM);
+            }
+            window.history.replaceState({}, '', nextUrl);
+        }
+
+        function setDebugMode(enabled) {
+            if (state.debug.enabled === enabled) {
+                return;
+            }
+
+            state.debug.enabled = enabled;
+            state.debug.cycleStartedAt = performance.now();
+            state.debug.peakTriggered = false;
+            refreshDebugPeakAnchor();
+            state.lastCountdownSecond = null;
+            syncDebugQueryParam(enabled);
+
+            if (enabled) {
+                setFooterCredit();
+                return;
+            }
+
+            state.poemIndex = getStoredPoemIndex() % Math.max(state.poems.length, 1);
+            renderPoem(state.poemIndex, { transition: 'none' });
+            state.targetLevel = getNormalizedTideLevel(new Date());
+            updateCountdown(new Date());
+        }
+
+        async function loadPoems() {
+            const response = await fetch(POEMS_PATH);
+            if (!response.ok) {
+                throw new Error('Unable to load poems.');
+            }
+
+            const poemCollection = await response.json();
+            state.poems = poemCollection.poems || [];
+            state.poemIndex = getStoredPoemIndex() % Math.max(state.poems.length, 1);
+            renderPoem(state.poemIndex, { transition: 'gather' });
+        }
+
+        async function loadCurrentWaterLevel() {
+            const endpoint = new URL('https://api.tidesandcurrents.noaa.gov/api/prod/datagetter');
+            endpoint.searchParams.set('product', 'water_level');
+            endpoint.searchParams.set('application', 'nocturne');
+            endpoint.searchParams.set('date', 'latest');
+            endpoint.searchParams.set('station', NOAA_STATION_ID);
+            endpoint.searchParams.set('datum', 'MLLW');
+            endpoint.searchParams.set('time_zone', 'gmt');
+            endpoint.searchParams.set('units', 'english');
+            endpoint.searchParams.set('format', 'json');
+
+            const response = await fetch(endpoint.toString());
+            if (!response.ok) {
+                throw new Error('Unable to load the current San Francisco water level.');
+            }
+
+            const payload = await response.json();
+            const latestObservation = payload.data && payload.data[0];
+            if (!latestObservation) {
+                throw new Error('No current water level was returned.');
+            }
+
+            state.observedWaterLevel = Number.parseFloat(latestObservation.v);
+            state.observedAt = parseNoaaDate(latestObservation.t);
+        }
+
+        async function loadTidePredictions() {
+            const beginDate = new Date(Date.now() - (24 * 60 * 60 * 1000));
+            const endpoint = new URL('https://api.tidesandcurrents.noaa.gov/api/prod/datagetter');
+            endpoint.searchParams.set('product', 'predictions');
+            endpoint.searchParams.set('application', 'nocturne');
+            endpoint.searchParams.set('begin_date', formatNoaaDate(beginDate));
+            endpoint.searchParams.set('range', String(TIDE_FETCH_RANGE_HOURS));
+            endpoint.searchParams.set('station', NOAA_STATION_ID);
+            endpoint.searchParams.set('datum', 'MLLW');
+            endpoint.searchParams.set('time_zone', 'gmt');
+            endpoint.searchParams.set('interval', 'hilo');
+            endpoint.searchParams.set('units', 'english');
+            endpoint.searchParams.set('format', 'json');
+
+            const response = await fetch(endpoint.toString());
+            if (!response.ok) {
+                throw new Error('Unable to load San Francisco tide data.');
+            }
+
+            const payload = await response.json();
+            if (!payload.predictions || !payload.predictions.length) {
+                throw new Error('No tide predictions were returned.');
+            }
+
+            state.predictions = payload.predictions.map((entry) => ({
+                time: parseNoaaDate(entry.t),
+                value: Number.parseFloat(entry.v),
+                type: entry.type
+            })).sort((a, b) => a.time - b.time);
+
+            const now = new Date();
+            syncPoemWithHighTides(now);
+            if (!state.debug.enabled) {
+                state.targetLevel = getNormalizedTideLevel(now);
+                updateCountdown(now);
+            }
+        }
+
+        async function initializeExperience() {
+            try {
+                await loadPoems();
+                state.initialized = true;
+
+                try {
+                    await Promise.all([loadTidePredictions(), loadCurrentWaterLevel()]);
+                    if (!state.debug.enabled) {
+                        state.targetLevel = getNormalizedTideLevel(new Date());
+                    }
+                } catch (error) {
+                    if (!state.debug.enabled) {
+                        throw error;
+                    }
+                    console.error(error);
+                }
+
+                if (state.debug.enabled) {
+                    state.lastCountdownSecond = null;
+                    syncDebugMode(performance.now());
+                }
+            } catch (error) {
+                console.error(error);
+                countdown.textContent = 'Tide data unavailable';
+                setFooterCredit();
+                poemTitle.textContent = 'Poems offline';
+                poemAuthor.textContent = 'Refresh once the local server can reach NOAA.';
+            }
+        }
+
+        const clock = new THREE.Clock();
+        function animate() {
+            requestAnimationFrame(animate);
+            const now = new Date();
+            const nowMs = performance.now();
+
+            if (state.initialized) {
+                if (state.debug.enabled) {
+                    syncDebugMode(nowMs);
+                } else {
+                    syncPoemWithHighTides(now);
+                    state.targetLevel = getNormalizedTideLevel(now);
+                    updateCountdown(now);
+                }
+            }
+
+            if (state.debug.enabled) {
+                state.currentLevel = state.targetLevel;
+            } else {
+                state.currentLevel += (state.targetLevel - state.currentLevel) * 0.035;
+            }
+            material.uniforms.u_time.value = clock.getElapsedTime();
+            material.uniforms.u_tide_level.value = clamp(state.currentLevel, 0.02, 0.98);
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            material.uniforms.u_resolution.value.set(window.innerWidth, window.innerHeight);
+            refreshDebugPeakAnchor();
+        });
+
+        window.addEventListener('keydown', (event) => {
+            if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.altKey) {
+                return;
+            }
+
+            if (event.key.toLowerCase() === DEBUG_TOGGLE_KEY) {
+                setDebugMode(!state.debug.enabled);
+            }
+        });
+
+        document.addEventListener('visibilitychange', syncAmbientAudioWithVisibility);
+
+        window.setInterval(() => {
+            loadTidePredictions().catch((error) => {
+                console.error(error);
+            });
+        }, TIDE_REFRESH_INTERVAL_MS);
+
+        window.setInterval(() => {
+            loadCurrentWaterLevel().then(() => {
+                if (!state.debug.enabled) {
+                    state.targetLevel = getNormalizedTideLevel(new Date());
+                }
+            }).catch((error) => {
+                console.error(error);
+            });
+        }, WATER_LEVEL_REFRESH_INTERVAL_MS);
+
+        syncDebugQueryParam(false);
+        initializeExperience();
+        setFooterCredit();
+        updateVisitCounter();
+        attemptAmbientAudioPlayback();
+    </script>
+
+</body></html>
