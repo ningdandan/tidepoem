@@ -1,0 +1,281 @@
+<html lang="en" vid="0"><head vid="1">
+    <meta charset="UTF-8" vid="2">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" vid="3">
+    <title vid="4">The Wind begun to knead the Grass</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" vid="5">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" vid="6">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300;1,400;1,500&amp;display=swap" rel="stylesheet" vid="7">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" vid="8"></script>
+
+    <style vid="9">
+        :root {
+            --bg-peach: #E8D5C4;
+            --bg-cool: #E2E2E6;
+            --glow-blue: #8CB6E8;
+            --core-dark: #1A151C;
+            --text-main: rgba(26, 21, 28, 0.9);
+            
+            --font-serif: 'Cormorant Garamond', serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: var(--bg-peach);
+            color: var(--text-main);
+            font-family: var(--font-serif);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        #canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            pointer-events: none;
+        }
+
+        .poem-container {
+            text-align: center;
+            max-width: 100%;
+            z-index: 20;
+            mix-blend-mode: exclusion;
+            color: #fff; 
+        }
+
+        .poem-title {
+            font-size: 2.2rem;
+            font-style: italic;
+            font-weight: 300;
+            margin-bottom: 0.5rem;
+            line-height: 1.1;
+        }
+
+        .poem-stanza {
+            font-size: 1.4rem;
+            font-style: italic;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+        }
+
+        .poem-author {
+            font-size: 0.95rem;
+            font-style: italic;
+            margin-bottom: 2rem;
+            letter-spacing: 0.1em;
+            opacity: 0.8;
+        }
+
+    </style>
+</head>
+<body vid="10">
+
+    <div id="canvas-container" vid="11"></div>
+
+    <div id="ui-layer" vid="12">
+        <div class="poem-container" vid="15">
+            <h1 class="poem-title" vid="16">The Wind begun to knead the Grass</h1>
+            <div class="poem-author" vid="21">Emily Dickinson</div>
+            <div class="poem-stanza" vid="17">
+                The Wind begun to knead the Grass—<br vid="18">
+                As Women do a Dough—<br vid="19">
+                He flung a Handful at the Plain—<br vid="20">
+                And then he ceased to blow—
+            </div>
+        </div>
+    </div>
+
+    <script vid="23">
+        const container = document.getElementById('canvas-container');
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        container.appendChild(renderer.domElement);
+
+        const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+        const scene = new THREE.Scene();
+
+        const uniforms = {
+            u_time: { value: 0.0 },
+            u_resolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+            u_color_bg_peach: { value: new THREE.Color('#E8D5C4') },
+            u_color_bg_cool: { value: new THREE.Color('#E2E2E6') },
+            u_color_glow: { value: new THREE.Color('#8CB6E8') },
+            u_color_core: { value: new THREE.Color('#1A151C') }
+        };
+
+        const vertexShader = `
+            void main() {
+                gl_Position = vec4(position, 1.0);
+            }
+        `;
+
+        const fragmentShader = `
+            uniform float u_time;
+            uniform vec2 u_resolution;
+            uniform vec3 u_color_bg_peach;
+            uniform vec3 u_color_bg_cool;
+            uniform vec3 u_color_glow;
+            uniform vec3 u_color_core;
+
+            float hash(vec2 p) {
+                p = fract(p * vec2(123.34, 456.21));
+                p += dot(p, p + 45.32);
+                return fract(p.x * p.y);
+            }
+
+            float noise(vec2 p) {
+                vec2 i = floor(p);
+                vec2 f = fract(p);
+                f = f * f * (3.0 - 2.0 * f);
+                float res = mix(
+                    mix(hash(i), hash(i + vec2(1.0, 0.0)), f.x),
+                    mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), f.x),
+                    f.y
+                );
+                return res;
+            }
+
+            float fbm(vec2 p) {
+                float f = 0.0;
+                float amp = 0.5;
+                for(int i = 0; i < 4; i++) {
+                    f += amp * noise(p);
+                    p *= 2.0;
+                    amp *= 0.5;
+                }
+                return f;
+            }
+
+            void main() {
+                vec2 uv = gl_FragCoord.xy / u_resolution.xy;
+                vec2 pos = uv - 0.5;
+                pos.x *= u_resolution.x / u_resolution.y;
+
+                float bg_mix = uv.y + noise(pos * 2.0 + u_time * 0.05) * 0.1;
+                vec3 bg_color = mix(u_color_bg_peach, u_color_bg_cool, clamp(bg_mix, 0.0, 1.0));
+
+                // Tide surface: rises from below the frame toward the top (repeating cycle)
+                float tide_phase = fract(u_time * 0.052);
+                float surface_base = mix(-0.28, 1.48, tide_phase);
+
+                // Long-period swell = overall tide-wave silhouette (detail texture unchanged below)
+                float wx = pos.x * 2.75;
+                float swell =
+                    sin(wx * 1.02 + u_time * 0.40) * 0.078 +
+                    sin(wx * 1.78 - u_time * 0.66) * 0.048 +
+                    sin(wx * 2.55 + u_time * 0.52 + 0.9) * 0.032 +
+                    sin(wx * 0.58 + u_time * 0.26 + 2.1) * 0.062;
+
+                // Irregular wave crest (same fbm inputs / weights as before — texture only)
+                float xh = pos.x * 5.5;
+                float distortion = fbm(vec2(xh * 1.1 + u_time * 0.14, u_time * 0.16 + 1.7)) * 0.13;
+                distortion += fbm(vec2(xh * 2.4 - u_time * 0.09, 3.1)) * 0.07;
+                distortion += fbm(vec2(uv.x * 9.0, uv.y * 3.0 + u_time * 0.11)) * 0.045;
+                float chop = sin(xh * 2.6 + u_time * 1.05 + 2.2 * fbm(vec2(xh * 1.4, u_time * 0.22))) * 0.038;
+                float surface_y = surface_base + swell + distortion + chop;
+
+                // Positive dy = above water; negative = below (uv.y is bottom-up)
+                float dy = uv.y - surface_y;
+                float edge_fog = fbm(vec2(uv.x * 6.2 + u_time * 0.08, uv.y * 6.0 + u_time * 0.09)) * 0.088;
+                edge_fog += (fbm(vec2(uv.x * 3.0 + u_time * 0.04, uv.y * 3.2 + u_time * 0.05)) - 0.5) * 0.055;
+                dy += edge_fog;
+
+                // Screen-space edge softening (avoids jaggy / pixelated mask boundaries)
+                float aa = (2.8 / u_resolution.y) * (0.55 + 0.45 * (u_resolution.x / max(u_resolution.y, 1.0)));
+
+                float core_mask = 1.0 - smoothstep(-0.34 - aa, -0.02 + aa, dy);
+                float glow_mask = 1.0 - smoothstep(-0.22 - aa, 0.38 + aa, dy);
+
+                vec3 final_color = bg_color;
+                final_color = mix(final_color, u_color_glow, glow_mask * 0.82);
+                final_color = mix(final_color, u_color_core, core_mask);
+
+                // Film grain — full frame: fine silver, coarse emulsion, light chroma, subtle flicker
+                vec2 fc = gl_FragCoord.xy;
+                vec2 rxy = max(u_resolution.xy, vec2(1.0));
+                vec2 film_uv = fc / rxy.y;
+                vec2 gt = vec2(u_time * 160.0, u_time * 97.0);
+
+                float silver_fine = hash(fc + gt * 0.31) - 0.5;
+                silver_fine += (hash(fc * 1.618 + gt.yx * 0.29) - 0.5) * 0.52;
+
+                float silver_coarse = fbm(film_uv * 88.0 + gt * 0.018) - 0.5;
+                silver_coarse += (fbm(film_uv * 40.0 - gt * 0.012) - 0.5) * 0.52;
+
+                vec3 chroma = vec3(
+                    hash(fc + vec2(0.0, 0.0) + gt) - 0.5,
+                    hash(fc + vec2(19.2, 7.0) + gt) - 0.5,
+                    hash(fc + vec2(31.0, 2.0) + gt) - 0.5
+                );
+
+                float flicker = 0.93 + 0.07 * hash(vec2(floor(u_time * 30.0) * 13.7, 2.9));
+
+                vec3 film_grain = vec3(silver_fine * 0.78 + silver_coarse * 0.58) + chroma * 0.24;
+                film_grain *= flicker;
+                final_color += film_grain * 0.058;
+
+                // Soft edge falloff (wide = blurrier frame edges)
+                float edge_dist = length(uv - 0.5);
+                float av = (1.6 / u_resolution.y) * (0.5 + 0.5 * (u_resolution.x / max(u_resolution.y, 1.0)));
+                float vignette = smoothstep(1.28 + av, 0.38 - av, edge_dist);
+                final_color *= vignette * 0.22 + 0.78;
+
+                gl_FragColor = vec4(final_color, 1.0);
+            }
+        `;
+
+        const material = new THREE.ShaderMaterial({
+            vertexShader,
+            fragmentShader,
+            uniforms
+        });
+
+        const plane = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material);
+        scene.add(plane);
+
+        function animate() {
+            requestAnimationFrame(animate);
+            uniforms.u_time.value += 0.01;
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            renderer.setSize(width, height);
+            uniforms.u_resolution.value.set(width, height);
+        });
+
+        animate();
+    </script>
+
+
+</body></html>

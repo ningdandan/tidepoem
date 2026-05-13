@@ -6,7 +6,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js" vid="5"></script>
 
     <style vid="6">
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=IBM+Plex+Mono:wght@300;400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300;1,400;1,500&display=swap');
 
         :root {
             --bg-base: #020608; 
@@ -14,10 +14,12 @@
             --text-muted: rgba(255, 255, 255, 0.4);
             --biolume: #00ffcc;
             --font-serif: 'Cormorant Garamond', serif;
-            --font-sans: 'IBM Plex Mono', monospace;
+            --font-sans: 'Cormorant Garamond', serif;
             --transition-soft: opacity 2s ease-in-out;
             --wash-duration: 1450ms;
-            --gather-duration: 1900ms;
+            --gather-duration: 3200ms;
+            --header-safe-space: 72px;
+            --footer-safe-space: 132px;
         }
 
         * {
@@ -44,7 +46,7 @@
             color: var(--text-primary);
             min-height: 100vh;
             overflow-x: hidden;
-            overflow-y: auto;
+            overflow-y: hidden;
             scrollbar-width: none;
             -ms-overflow-style: none;
             -webkit-font-smoothing: antialiased;
@@ -66,16 +68,26 @@
             width: 100%;
             max-width: 720px;
             text-align: center;
-            min-height: 122vh;
             margin: 0 auto;
-            padding: 22vh 40px 220px;
+            height: calc(100vh - var(--header-safe-space) - var(--footer-safe-space));
+            margin-top: var(--header-safe-space);
+            margin-bottom: var(--footer-safe-space);
+            padding: 2vh 40px 0;
+            overflow-y: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .content-layer::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+            display: none;
         }
 
         .poem-container {
             display: flex;
             flex-direction: column;
             gap: 1.35rem;
-            animation: fadeIn 4s ease-in;
             transition: opacity 0.9s ease, transform 0.9s ease;
             opacity: 1;
             transform: translateY(0);
@@ -96,13 +108,14 @@
         .poem-title {
             font-size: clamp(20px, 3vw, 28px);
             font-weight: 300;
+            font-style: italic;
             letter-spacing: 0.02em;
         }
 
         .poem-author {
-            font-family: var(--font-sans);
-            font-size: 10px;
-            letter-spacing: 0.04em;
+            font-size: 15px;
+            font-style: italic;
+            letter-spacing: 0.08em;
             color: var(--text-muted);
         }
 
@@ -118,10 +131,20 @@
             line-height: 1.5;
             letter-spacing: 0.02em;
             font-style: italic;
+            animation: waterBreathLine var(--breath-duration, 6.4s) ease-in-out infinite;
+            animation-delay: var(--breath-delay, 0s);
+            transform-origin: 50% 50%;
+            will-change: transform;
         }
 
         .poem-stanza {
             margin-bottom: 1.3rem;
+        }
+
+        .poem-container.is-flushing .poem-line,
+        .poem-container.is-gathering .poem-line,
+        .poem-container.is-pre-gather .poem-line {
+            animation-play-state: paused;
         }
 
         .poem-word {
@@ -147,6 +170,7 @@
             z-index: 20;
             width: min(90vw, 460px);
             text-align: center;
+            opacity: 0.6;
         }
 
         .top-status {
@@ -157,15 +181,26 @@
             z-index: 20;
             width: min(90vw, 460px);
             text-align: center;
+            opacity: 0.6;
         }
 
         .countdown,
         .countdown-meta {
-            font-family: var(--font-sans);
-            font-size: 10px;
-            letter-spacing: 0.04em;
+            font-size: 15px;
+            font-style: italic;
+            letter-spacing: 0.06em;
             color: var(--text-muted);
             line-height: 1.6;
+        }
+
+        .countdown-meta a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .countdown-meta a:hover,
+        .countdown-meta a:focus-visible {
+            text-decoration: underline;
         }
 
         @keyframes fadeIn {
@@ -213,6 +248,24 @@
             }
         }
 
+        @keyframes waterBreathLine {
+            0% {
+                transform: translate3d(0, 0, 0) rotate(0deg);
+            }
+            22% {
+                transform: translate3d(var(--drift-a-x, 1.8px), var(--drift-a-y, -1.2px), 0) rotate(var(--tilt-a, 0.2deg));
+            }
+            53% {
+                transform: translate3d(var(--drift-b-x, -1.6px), var(--drift-b-y, 1.4px), 0) rotate(var(--tilt-b, -0.18deg));
+            }
+            77% {
+                transform: translate3d(var(--drift-c-x, 1.2px), var(--drift-c-y, 0.7px), 0) rotate(var(--tilt-c, 0.12deg));
+            }
+            100% {
+                transform: translate3d(0, 0, 0) rotate(0deg);
+            }
+        }
+
         .poem-container.is-flushing .poem-fragment-char {
             animation: washAway var(--wash-duration) cubic-bezier(0.22, 0.8, 0.12, 1) forwards;
             animation-delay: var(--line-delay, 0ms);
@@ -246,47 +299,13 @@
             z-index: 5;
         }
 
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 26vh;
-            background: linear-gradient(
-                to bottom,
-                rgba(2, 6, 8, 0.98) 0%,
-                rgba(2, 6, 8, 0.92) 28%,
-                rgba(2, 6, 8, 0.72) 55%,
-                rgba(2, 6, 8, 0.35) 78%,
-                rgba(2, 6, 8, 0) 100%
-            );
-            pointer-events: none;
-            z-index: 15;
-        }
-
-        .bottom-fade {
-            position: fixed;
-            left: 0;
-            bottom: 0;
-            width: 100%;
-            height: 30vh;
-            background: linear-gradient(
-                to top,
-                rgba(2, 6, 8, 1) 0%,
-                rgba(2, 6, 8, 0.96) 24%,
-                rgba(2, 6, 8, 0.78) 48%,
-                rgba(2, 6, 8, 0.34) 74%,
-                rgba(2, 6, 8, 0) 100%
-            );
-            pointer-events: none;
-            z-index: 15;
-        }
 
         @media (max-width: 720px) {
             .content-layer {
-                min-height: 120vh;
-                padding: 20vh 24px 210px;
+                height: calc(100vh - 62px - 118px);
+                margin-top: 62px;
+                margin-bottom: 118px;
+                padding: 2vh 24px 0;
             }
 
             .top-status {
@@ -320,8 +339,6 @@
         </div>
     </div>
 
-    <div class="bottom-fade" aria-hidden="true"></div>
-
     <div class="footer-nav" vid="17">
         <div class="countdown" id="countdown">Next poem in 00h 00m 00s, San Francisco high tide at 0:00 AM</div>
         <div class="countdown-meta" id="countdown-meta">Powered by Ouvre</div>
@@ -343,7 +360,7 @@
         const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 10);
         camera.position.z = 1;
 
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(window.devicePixelRatio);
         container.appendChild(renderer.domElement);
@@ -362,46 +379,105 @@
             uniform float u_time;
             uniform vec2 u_resolution;
             uniform float u_tide_level;
+            uniform vec3 u_color_bg_peach;
+            uniform vec3 u_color_bg_cool;
+            uniform vec3 u_color_glow;
+            uniform vec3 u_color_core;
             varying vec2 vUv;
 
             float hash(vec2 p) {
-                return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+                p = fract(p * vec2(123.34, 456.21));
+                p += dot(p, p + 45.32);
+                return fract(p.x * p.y);
             }
 
             float noise(vec2 p) {
                 vec2 i = floor(p);
                 vec2 f = fract(p);
                 f = f * f * (3.0 - 2.0 * f);
-                return mix(mix(hash(i + vec2(0,0)), hash(i + vec2(1,0)), f.x),
-                           mix(hash(i + vec2(0,1)), hash(i + vec2(1,1)), f.x), f.y);
+                float res = mix(
+                    mix(hash(i), hash(i + vec2(1.0, 0.0)), f.x),
+                    mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), f.x),
+                    f.y
+                );
+                return res;
+            }
+
+            float fbm(vec2 p) {
+                float f = 0.0;
+                float amp = 0.5;
+                for(int i = 0; i < 4; i++) {
+                    f += amp * noise(p);
+                    p *= 2.0;
+                    amp *= 0.5;
+                }
+                return f;
             }
 
             void main() {
                 vec2 uv = gl_FragCoord.xy / u_resolution.xy;
+                vec2 pos = uv - 0.5;
+                pos.x *= u_resolution.x / u_resolution.y;
 
-                float waterline = mix(0.08, 0.92, u_tide_level);
+                float bg_mix = uv.y + noise(pos * 2.0 + u_time * 0.05) * 0.1;
+                vec3 bg_color = mix(u_color_bg_peach, u_color_bg_cool, clamp(bg_mix, 0.0, 1.0));
 
-                // Add wave distortion to the waterline
-                float distortion = noise(vec2(uv.x * 4.0 + u_time * 0.3, u_time * 0.1)) * 0.08;
-                float finalWaterline = waterline + distortion;
+                float surface_base = mix(-0.28, 1.48, u_tide_level);
+                float wx = pos.x * 2.75;
+                float swell =
+                    sin(wx * 1.02 + u_time * 0.40) * 0.078 +
+                    sin(wx * 1.78 - u_time * 0.66) * 0.048 +
+                    sin(wx * 2.55 + u_time * 0.52 + 0.9) * 0.032 +
+                    sin(wx * 0.58 + u_time * 0.26 + 2.1) * 0.062;
 
-                // Create the bioluminescent edge (the "tideline")
-                float distance = abs(uv.y - finalWaterline);
-                float glow = exp(-distance * 45.0); // Sharp intense line
-                float softGlow = exp(-distance * 8.0) * 0.4; // Diffuse glow
-                
-                // Phosphorescence flickers
-                float flicker = noise(vec2(uv.x * 10.0, u_time)) * 0.5 + 0.5;
-                
-                // Teal bioluminescent color
-                vec3 biolumeColor = vec3(0.0, 1.0, 0.8);
-                vec3 color = biolumeColor * (glow + softGlow) * flicker;
+                float xh = pos.x * 5.5;
+                float distortion = fbm(vec2(xh * 1.1 + u_time * 0.14, u_time * 0.16 + 1.7)) * 0.13;
+                distortion += fbm(vec2(xh * 2.4 - u_time * 0.09, 3.1)) * 0.07;
+                distortion += fbm(vec2(uv.x * 9.0, uv.y * 3.0 + u_time * 0.11)) * 0.045;
+                float chop = sin(xh * 2.6 + u_time * 1.05 + 2.2 * fbm(vec2(xh * 1.4, u_time * 0.22))) * 0.038;
+                float surface_y = surface_base + swell + distortion + chop;
 
-                // Fading into the deep water at bottom
-                float depth = smoothstep(finalWaterline, 0.0, uv.y) * 0.15;
-                color += biolumeColor * depth * flicker;
+                float dy = uv.y - surface_y;
+                float edge_fog = fbm(vec2(uv.x * 6.2 + u_time * 0.08, uv.y * 6.0 + u_time * 0.09)) * 0.088;
+                edge_fog += (fbm(vec2(uv.x * 3.0 + u_time * 0.04, uv.y * 3.2 + u_time * 0.05)) - 0.5) * 0.055;
+                dy += edge_fog;
 
-                gl_FragColor = vec4(color, color.g * 0.8);
+                float aa = (2.8 / u_resolution.y) * (0.55 + 0.45 * (u_resolution.x / max(u_resolution.y, 1.0)));
+                float core_mask = 1.0 - smoothstep(-0.34 - aa, -0.02 + aa, dy);
+                float glow_mask = 1.0 - smoothstep(-0.22 - aa, 0.38 + aa, dy);
+
+                vec3 final_color = bg_color;
+                final_color = mix(final_color, u_color_glow, glow_mask * 0.82);
+                final_color = mix(final_color, u_color_core, core_mask);
+
+                vec2 fc = gl_FragCoord.xy;
+                vec2 rxy = max(u_resolution.xy, vec2(1.0));
+                vec2 film_uv = fc / rxy.y;
+                vec2 gt = vec2(u_time * 160.0, u_time * 97.0);
+
+                float silver_fine = hash(fc + gt * 0.31) - 0.5;
+                silver_fine += (hash(fc * 1.618 + gt.yx * 0.29) - 0.5) * 0.52;
+
+                float silver_coarse = fbm(film_uv * 88.0 + gt * 0.018) - 0.5;
+                silver_coarse += (fbm(film_uv * 40.0 - gt * 0.012) - 0.5) * 0.52;
+
+                vec3 chroma = vec3(
+                    hash(fc + vec2(0.0, 0.0) + gt) - 0.5,
+                    hash(fc + vec2(19.2, 7.0) + gt) - 0.5,
+                    hash(fc + vec2(31.0, 2.0) + gt) - 0.5
+                );
+
+                float flicker = 0.93 + 0.07 * hash(vec2(floor(u_time * 30.0) * 13.7, 2.9));
+                vec3 film_grain = vec3(silver_fine * 0.78 + silver_coarse * 0.58) + chroma * 0.24;
+                film_grain *= flicker;
+                final_color += film_grain * 0.058;
+
+                float edge_dist = length(uv - 0.5);
+                float av = (1.6 / u_resolution.y) * (0.5 + 0.5 * (u_resolution.x / max(u_resolution.y, 1.0)));
+                float vignette = smoothstep(1.28 + av, 0.38 - av, edge_dist);
+                final_color *= vignette * 0.22 + 0.78;
+
+                gl_FragColor = vec4(final_color, 1.0);
             }
         `;
 
@@ -411,10 +487,12 @@
             uniforms: {
                 u_time: { value: 0.0 },
                 u_resolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
-                u_tide_level: { value: 0.12 }
-            },
-            transparent: true,
-            blending: THREE.AdditiveBlending
+                u_tide_level: { value: 0.12 },
+                u_color_bg_peach: { value: new THREE.Color('#E8D5C4') },
+                u_color_bg_cool: { value: new THREE.Color('#E2E2E6') },
+                u_color_glow: { value: new THREE.Color('#8CB6E8') },
+                u_color_core: { value: new THREE.Color('#1A151C') }
+            }
         });
 
         const mesh = new THREE.Mesh(geometry, material);
@@ -435,9 +513,10 @@
         const DEBUG_TOTAL_MS = DEBUG_RISE_MS + DEBUG_CREST_MS + DEBUG_FALL_MS + DEBUG_TROUGH_MS;
         const DEBUG_TOGGLE_KEY = 'k';
         const POEM_FLUSH_DURATION_MS = 1450;
-        const POEM_GATHER_DURATION_MS = 1900;
-        const POEM_GATHER_CLEANUP_MS = 2200;
-        const FOOTER_CREDIT_TEXT = 'Powered by Ouvre';
+        const POEM_GATHER_DURATION_MS = 3200;
+        const POEM_GATHER_CLEANUP_MS = 3600;
+        const FOOTER_CREDIT_TEXT = 'powered by ouvre';
+        const FOOTER_CREDIT_URL = 'https://ouvre.nyc';
         const VISIT_COUNT_STORAGE_PREFIX = 'nocturne-visit-count:';
         const VISIT_SESSION_STORAGE_PREFIX = 'nocturne-visit-session:';
         const AUDIO_FALLBACK_EVENTS = ['pointerdown', 'keydown', 'touchstart'];
@@ -539,7 +618,13 @@
         }
 
         function setFooterCredit() {
-            countdownMeta.textContent = FOOTER_CREDIT_TEXT;
+            countdownMeta.innerHTML = '';
+            const creditLink = document.createElement('a');
+            creditLink.href = FOOTER_CREDIT_URL;
+            creditLink.textContent = FOOTER_CREDIT_TEXT;
+            creditLink.target = '_blank';
+            creditLink.rel = 'noopener noreferrer';
+            countdownMeta.appendChild(creditLink);
         }
 
         function cancelAmbientAudioFade() {
@@ -654,12 +739,11 @@
         }
 
         function seedPoemFragments() {
-            getPoemFragments().forEach((fragment, index) => {
-                const direction = index % 2 === 0 ? 1 : -1;
-                const driftX = direction * (8 + ((index % 7) * 3));
-                const driftY = 18 + ((index % 11) * 4);
-                const rotate = direction * (1 + ((index % 5) * 0.7));
-                const delay = Math.min(index * 12, 720);
+            getPoemFragments().forEach((fragment) => {
+                const driftX = (Math.random() * 2 - 1) * (14 + (Math.random() * 48));
+                const driftY = (Math.random() * 2 - 1) * (20 + (Math.random() * 76));
+                const rotate = (Math.random() * 2 - 1) * (3 + (Math.random() * 10));
+                const delay = Math.random() * 1400;
 
                 fragment.style.setProperty('--drift-x', String(driftX));
                 fragment.style.setProperty('--drift-y', String(driftY));
@@ -735,6 +819,21 @@
                 stanzaText.split('\n').forEach((line) => {
                     const lineElement = document.createElement('p');
                     lineElement.className = 'poem-line';
+                    const randomSigned = (min, max) => {
+                        const magnitude = min + (Math.random() * (max - min));
+                        return (Math.random() < 0.5 ? -1 : 1) * magnitude;
+                    };
+                    lineElement.style.setProperty('--breath-duration', `${5 + (Math.random() * 2.8)}s`);
+                    lineElement.style.setProperty('--breath-delay', `${(Math.random() * -2.4).toFixed(3)}s`);
+                    lineElement.style.setProperty('--drift-a-x', `${randomSigned(1.8, 4.2).toFixed(2)}px`);
+                    lineElement.style.setProperty('--drift-a-y', `${randomSigned(0.8, 2.8).toFixed(2)}px`);
+                    lineElement.style.setProperty('--drift-b-x', `${randomSigned(1.2, 3.8).toFixed(2)}px`);
+                    lineElement.style.setProperty('--drift-b-y', `${randomSigned(0.8, 2.5).toFixed(2)}px`);
+                    lineElement.style.setProperty('--drift-c-x', `${randomSigned(0.8, 3.0).toFixed(2)}px`);
+                    lineElement.style.setProperty('--drift-c-y', `${randomSigned(0.6, 2.1).toFixed(2)}px`);
+                    lineElement.style.setProperty('--tilt-a', `${randomSigned(0.12, 0.42).toFixed(3)}deg`);
+                    lineElement.style.setProperty('--tilt-b', `${randomSigned(0.1, 0.35).toFixed(3)}deg`);
+                    lineElement.style.setProperty('--tilt-c', `${randomSigned(0.08, 0.24).toFixed(3)}deg`);
                     setAnimatedText(lineElement, line);
                     stanza.appendChild(lineElement);
                 });
@@ -1134,6 +1233,11 @@
         }
 
         const clock = new THREE.Clock();
+        function updateTideAnimationHook(elapsedTime, tideLevel) {
+            material.uniforms.u_time.value = elapsedTime;
+            material.uniforms.u_tide_level.value = clamp(tideLevel, 0.02, 0.98);
+        }
+
         function animate() {
             requestAnimationFrame(animate);
             const now = new Date();
@@ -1154,8 +1258,7 @@
             } else {
                 state.currentLevel += (state.targetLevel - state.currentLevel) * 0.035;
             }
-            material.uniforms.u_time.value = clock.getElapsedTime();
-            material.uniforms.u_tide_level.value = clamp(state.currentLevel, 0.02, 0.98);
+            updateTideAnimationHook(clock.getElapsedTime(), state.currentLevel);
             renderer.render(scene, camera);
         }
         animate();

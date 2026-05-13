@@ -1,0 +1,25 @@
+{
+  "name": "poem",
+  "version": "1.0.0",
+  "description": "Tide-driven poetry experience with ElevenLabs narration tooling.",
+  "main": "index.js",
+  "scripts": {
+    "generate:tts": "node scripts/generate-elevenlabs-audio.mjs",
+    "generate:tts:force": "node scripts/generate-elevenlabs-audio.mjs --force"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ningdandan/tidepoem.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ningdandan/tidepoem/issues"
+  },
+  "homepage": "https://github.com/ningdandan/tidepoem#readme",
+  "dependencies": {
+    "@elevenlabs/elevenlabs-js": "^2.46.0"
+  }
+}

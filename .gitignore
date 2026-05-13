@@ -1,0 +1,14 @@
+.DS_Store
+node_modules/
+
+# Secrets and local environment
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+*credentials*.json
+secrets*.json
